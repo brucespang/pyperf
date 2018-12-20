@@ -19,10 +19,8 @@ def parse(filepath_or_buffer):
                      header=None,
                      parse_dates=['timestamp'],
                      date_parser=lambda x: pd.datetime.strptime(x, iperf_timestamp_format))
-    df["mbps"] = df["bits_per_second"]*1e-6
     starts,ends = zip(*[[float(x) for x in row.interval.split('-')] for _,row in df.iterrows() ])
     df['start'],df['end'] = starts,ends
-    df = df[df.flow_id >= 0]
     # filter out the aggregate row
     df = df[df.apply(lambda r: not(r.start == min(starts) and r.end == max(ends)), axis=1)]
     return df
